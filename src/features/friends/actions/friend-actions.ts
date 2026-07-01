@@ -83,10 +83,12 @@ export async function sendP2PTransfer(friendId: string, amount: number, walletId
     const session = await auth();
     if (!session?.user?.id) throw new Error("Unauthorized");
 
+    const userId = session.user.id;
+
     await prisma.$transaction(async (tx) => {
       // Validate sender wallet
       const senderWallet = await tx.wallet.findUnique({ where: { id: walletId } });
-      if (!senderWallet || senderWallet.userId !== session.user.id) throw new Error("Wallet not found");
+      if (!senderWallet || senderWallet.userId !== userId) throw new Error("Wallet not found");
       if (Number(senderWallet.balance) < amount) throw new Error("Insufficient balance");
 
       // Validate friendship
@@ -94,8 +96,8 @@ export async function sendP2PTransfer(friendId: string, amount: number, walletId
         where: {
           status: "ACCEPTED",
           OR: [
-            { userId: session.user.id, friendId: friendId },
-            { userId: friendId, friendId: session.user.id }
+            { userId: userId, friendId: friendId },
+            { userId: friendId, friendId: userId }
           ]
         }
       });
@@ -128,7 +130,7 @@ export async function sendP2PTransfer(friendId: string, amount: number, walletId
           category: "Transfer",
           description: description || "P2P Transfer Sent",
           walletId: senderWallet.id,
-          senderId: session.user.id,
+          senderId: userId,
           receiverId: friendId,
         }
       });
@@ -141,7 +143,7 @@ export async function sendP2PTransfer(friendId: string, amount: number, walletId
           category: "Transfer",
           description: description || "P2P Transfer Received",
           walletId: receiverWallet.id,
-          senderId: session.user.id,
+          senderId: userId,
           receiverId: friendId,
         }
       });
