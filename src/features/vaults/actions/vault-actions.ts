@@ -15,6 +15,8 @@ export async function createVault(data: FormData) {
 
     if (!name) throw new Error("Name is required");
 
+    const userId = session.user.id as string;
+
     await prisma.$transaction(async (tx) => {
       const vault = await tx.vault.create({
         data: {
@@ -29,7 +31,7 @@ export async function createVault(data: FormData) {
       await tx.vaultMember.create({
         data: {
           vaultId: vault.id,
-          userId: session.user!.id,
+          userId: userId,
           role: "OWNER"
         }
       });
@@ -86,16 +88,18 @@ export async function contributeToVault(vaultId: string, walletId: string, amoun
     const session = await auth();
     if (!session?.user?.id) throw new Error("Unauthorized");
 
+    const userId = session.user.id as string;
+
     await prisma.$transaction(async (tx) => {
       // Check membership
       const isMember = await tx.vaultMember.findUnique({
-        where: { vaultId_userId: { vaultId, userId: session.user.id } }
+        where: { vaultId_userId: { vaultId, userId: userId } }
       });
       if (!isMember) throw new Error("You are not a member of this vault");
 
       // Check wallet
       const wallet = await tx.wallet.findUnique({ where: { id: walletId } });
-      if (!wallet || wallet.userId !== session.user.id) throw new Error("Wallet not found");
+      if (!wallet || wallet.userId !== userId) throw new Error("Wallet not found");
       if (Number(wallet.balance) < amount) throw new Error("Insufficient balance");
 
       // Deduct from wallet
@@ -119,7 +123,7 @@ export async function contributeToVault(vaultId: string, walletId: string, amoun
           description: `Contribution to ${vault.name}`,
           walletId: wallet.id,
           vaultId: vault.id,
-          senderId: session.user.id, // Who contributed it
+          senderId: userId, // Who contributed it
         }
       });
     });

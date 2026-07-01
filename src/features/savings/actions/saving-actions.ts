@@ -35,13 +35,14 @@ export async function depositToSaving(savingId: string, walletId: string, amount
     const session = await auth();
     if (!session?.user?.id) throw new Error("Unauthorized");
 
+    const userId = session.user.id;
     // Start transaction to ensure atomicity
     await prisma.$transaction(async (tx) => {
       const saving = await tx.saving.findUnique({ where: { id: savingId } });
       const wallet = await tx.wallet.findUnique({ where: { id: walletId } });
 
-      if (!saving || saving.userId !== session.user.id) throw new Error("Saving not found");
-      if (!wallet || wallet.userId !== session.user.id) throw new Error("Wallet not found");
+      if (!saving || saving.userId !== userId) throw new Error("Saving not found");
+      if (!wallet || wallet.userId !== userId) throw new Error("Wallet not found");
       if (Number(wallet.balance) < amount) throw new Error("Insufficient balance in wallet");
 
       // 1. Deduct from wallet
@@ -82,12 +83,13 @@ export async function withdrawFromSaving(savingId: string, walletId: string, amo
     const session = await auth();
     if (!session?.user?.id) throw new Error("Unauthorized");
 
+    const userId = session.user.id;
     await prisma.$transaction(async (tx) => {
       const saving = await tx.saving.findUnique({ where: { id: savingId } });
       const wallet = await tx.wallet.findUnique({ where: { id: walletId } });
 
-      if (!saving || saving.userId !== session.user.id) throw new Error("Saving not found");
-      if (!wallet || wallet.userId !== session.user.id) throw new Error("Wallet not found");
+      if (!saving || saving.userId !== userId) throw new Error("Saving not found");
+      if (!wallet || wallet.userId !== userId) throw new Error("Wallet not found");
       if (Number(saving.current) < amount) throw new Error("Insufficient savings balance");
 
       // 1. Add to wallet
