@@ -44,3 +44,51 @@ export async function getUserWallets() {
     return [];
   }
 }
+
+export async function updateWallet(formData: FormData) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) throw new Error("Unauthorized");
+    
+    const id = formData.get("id") as string;
+    const name = formData.get("name") as string;
+    const type = formData.get("type") as WalletType;
+    
+    if (!id || !name || !type) throw new Error("Missing required fields");
+
+    // Verify ownership
+    const wallet = await prisma.wallet.findFirst({ where: { id, userId: session.user.id } });
+    if (!wallet) throw new Error("Wallet not found");
+
+    await prisma.wallet.update({
+      where: { id },
+      data: { name, type }
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to update wallet" };
+  }
+}
+
+export async function deleteWallet(id: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) throw new Error("Unauthorized");
+
+    const wallet = await prisma.wallet.findFirst({ where: { id, userId: session.user.id } });
+    if (!wallet) throw new Error("Wallet not found");
+
+    // Check if wallet has transactions
+    const txCount = await prisma.transaction.count({ where: { walletId: id } });
+    if (txCount > 0) throw new Error("Cannot delete wallet with existing transactions");
+
+    await prisma.wallet.delete({ where: { id } });
+
+    revalidatePath("/", "layout");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to delete wallet" };
+  }
+}

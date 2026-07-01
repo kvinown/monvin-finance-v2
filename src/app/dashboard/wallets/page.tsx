@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { NewWalletModal } from "@/components/modals/new-wallet-modal";
+import { ManageWalletModal } from "@/components/modals/manage-wallet-modal";
 
 export default async function WalletsPage() {
   const session = await auth();
@@ -113,9 +114,11 @@ export default async function WalletsPage() {
                 </span>
               </div>
               <div className="mt-4 pt-4 border-t border-border-subtle flex justify-end gap-2">
-                <button className="h-[32px] px-4 bg-transparent border border-outline text-on-surface rounded-lg font-table-data text-table-data hover:bg-surface-container transition-colors">
-                  Manage
-                </button>
+                <ManageWalletModal wallet={wallet}>
+                  <button className="h-[32px] px-4 bg-transparent border border-outline text-on-surface rounded-lg font-table-data text-table-data hover:bg-surface-container transition-colors">
+                    Manage
+                  </button>
+                </ManageWalletModal>
               </div>
             </div>
           ))
