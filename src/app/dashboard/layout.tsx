@@ -184,8 +184,7 @@ export default function DashboardLayout({
               <span className="material-symbols-outlined">help_outline</span>
             </button>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="hidden md:flex items-center gap-3 ml-2 pl-4 border-l border-border-subtle cursor-pointer hover:opacity-80 transition-opacity">
+              <DropdownMenuTrigger className="hidden md:flex items-center gap-3 ml-2 pl-4 border-l border-border-subtle cursor-pointer hover:opacity-80 transition-opacity outline-none bg-transparent border-none">
                   <div className="flex flex-col items-end">
                     <span className="text-on-surface text-sm font-medium leading-tight">Administrator</span>
                     <span className="text-on-surface-variant text-xs">admin@monvin.com</span>
@@ -193,11 +192,10 @@ export default function DashboardLayout({
                   <div className="w-9 h-9 rounded-full border border-border-subtle bg-surface-variant flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
                   </div>
-                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-surface-container-lowest border-border-subtle">
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile" className="flex items-center cursor-pointer">
+                <DropdownMenuItem>
+                  <Link href="/dashboard/profile" className="flex items-center cursor-pointer w-full h-full">
                     <span className="material-symbols-outlined mr-2 text-[18px]">person</span>
                     Edit Profile
                   </Link>
@@ -211,14 +209,12 @@ export default function DashboardLayout({
             </DropdownMenu>
 
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="w-8 h-8 rounded-full border border-border-subtle md:hidden flex items-center justify-center bg-surface-variant ml-2 cursor-pointer">
+              <DropdownMenuTrigger className="w-8 h-8 rounded-full border border-border-subtle md:hidden flex items-center justify-center bg-surface-variant ml-2 cursor-pointer outline-none">
                   <span className="material-symbols-outlined text-[16px] text-on-surface-variant">person</span>
-                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 bg-surface-container-lowest border-border-subtle">
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile" className="flex items-center cursor-pointer">
+                <DropdownMenuItem>
+                  <Link href="/dashboard/profile" className="flex items-center cursor-pointer w-full h-full">
                     <span className="material-symbols-outlined mr-2 text-[18px]">person</span>
                     Edit Profile
                   </Link>
