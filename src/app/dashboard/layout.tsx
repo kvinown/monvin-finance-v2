@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession, SessionProvider } from "next-auth/react";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
@@ -13,14 +13,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { NewTransactionModal } from "@/components/modals/new-transaction-modal";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  return (
+    <SessionProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </SessionProvider>
+  );
+}
+
+function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <div className="bg-background text-on-surface font-body-base h-screen flex overflow-hidden">
@@ -50,10 +60,12 @@ export default function DashboardLayout({
             </button>
           </div>
         </div>
-        <button className="w-full bg-secondary text-on-secondary h-[40px] rounded-lg mb-stack-lg font-table-data text-table-data font-medium flex items-center justify-center gap-2 hover:bg-secondary-container transition-colors">
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          New Transaction
-        </button>
+        <NewTransactionModal>
+          <button className="w-full bg-secondary text-on-secondary h-[40px] rounded-lg mb-stack-lg font-table-data text-table-data font-medium flex items-center justify-center gap-2 hover:bg-secondary-container transition-colors">
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            New Transaction
+          </button>
+        </NewTransactionModal>
         <div className="flex flex-col gap-1 flex-grow font-body-base text-body-base">
           <Link
             href="/dashboard"
@@ -186,8 +198,12 @@ export default function DashboardLayout({
             <DropdownMenu>
               <DropdownMenuTrigger className="hidden md:flex items-center gap-3 ml-2 pl-4 border-l border-border-subtle cursor-pointer hover:opacity-80 transition-opacity outline-none bg-transparent border-none">
                   <div className="flex flex-col items-end">
-                    <span className="text-on-surface text-sm font-medium leading-tight">Administrator</span>
-                    <span className="text-on-surface-variant text-xs">admin@monvin.com</span>
+                    <span className="text-on-surface text-sm font-medium leading-tight">
+                      {session?.user?.name || "User"}
+                    </span>
+                    <span className="text-on-surface-variant text-xs">
+                      {session?.user?.email || "user@example.com"}
+                    </span>
                   </div>
                   <div className="w-9 h-9 rounded-full border border-border-subtle bg-surface-variant flex items-center justify-center">
                     <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>

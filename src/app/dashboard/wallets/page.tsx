@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { NewWalletModal } from "@/components/modals/new-wallet-modal";
 
 export default async function WalletsPage() {
   const session = await auth();
@@ -30,10 +31,12 @@ export default async function WalletsPage() {
             Oversee and manage your institutional accounts and e-wallets.
           </p>
         </div>
-        <button className="h-[40px] px-6 bg-primary text-on-primary rounded-lg font-table-data text-table-data flex items-center gap-2 transition-colors hover:bg-on-surface shadow-sm">
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          Create New Wallet
-        </button>
+        <NewWalletModal>
+          <button className="h-[40px] px-6 bg-primary text-on-primary rounded-lg font-table-data text-table-data flex items-center gap-2 transition-colors hover:bg-on-surface shadow-sm">
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            Create New Wallet
+          </button>
+        </NewWalletModal>
       </div>
 
       {/* Total Overview Card */}
