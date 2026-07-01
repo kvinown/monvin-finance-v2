@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# Legacy repo & agent configs
+/monvin-legacy
+/.agents
+
+# Scratch and planning docs
+AI_CONTEXT.md
+EXECUTE.md
+scratch-*.ts
+stitch_html.html
+stitch_monvin_social_finance_platform/
