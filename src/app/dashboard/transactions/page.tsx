@@ -1,19 +1,31 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
-export default async function TransactionsPage() {
+export default async function TransactionsPage(props: {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const session = await auth();
   if (!session?.user?.id) {
     redirect("/api/auth/signin");
   }
 
-  const transactions = await prisma.transaction.findMany({
-    where: {
-      wallet: {
-        userId: session.user.id,
-      },
+  const searchParams = await props.searchParams;
+  const typeFilter = searchParams?.type as string | undefined;
+
+  const whereClause: any = {
+    wallet: {
+      userId: session.user.id,
     },
+  };
+
+  if (typeFilter && ["INCOME", "EXPENSE", "TRANSFER"].includes(typeFilter.toUpperCase())) {
+    whereClause.type = typeFilter.toUpperCase();
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where: whereClause,
     include: {
       wallet: true,
     },
@@ -44,10 +56,10 @@ export default async function TransactionsPage() {
           <p className="font-body-base text-body-base text-on-surface-variant mt-1">Review and reconcile your institutional accounts.</p>
         </div>
         <div className="flex gap-2">
-          <button className="h-10 px-4 border border-border-subtle rounded-lg bg-surface font-table-data text-table-data font-medium text-primary hover:bg-surface-container-low transition-colors flex items-center gap-2">
+          <Link href="/dashboard/reports" className="h-10 px-4 border border-border-subtle rounded-lg bg-surface font-table-data text-table-data font-medium text-primary hover:bg-surface-container-low transition-colors flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Export
-          </button>
+          </Link>
           <button className="h-10 px-4 border border-border-subtle rounded-lg bg-surface font-table-data text-table-data font-medium text-primary hover:bg-surface-container-low transition-colors flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px]">filter_list</span>
             Filters
@@ -97,10 +109,10 @@ export default async function TransactionsPage() {
         {/* Table Actions/Filters Bar */}
         <div className="p-4 border-b border-border-subtle bg-background flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="flex gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-hide">
-            <button className="h-8 px-3 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] whitespace-nowrap">All</button>
-            <button className="h-8 px-3 rounded-full border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low font-label-caps text-[11px] whitespace-nowrap">Income</button>
-            <button className="h-8 px-3 rounded-full border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low font-label-caps text-[11px] whitespace-nowrap">Expense</button>
-            <button className="h-8 px-3 rounded-full border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low font-label-caps text-[11px] whitespace-nowrap">Transfer</button>
+            <Link href="/dashboard/transactions" className={`flex items-center h-8 px-3 rounded-full font-label-caps text-[11px] whitespace-nowrap transition-colors ${!typeFilter || typeFilter === 'all' ? 'bg-primary-container text-on-primary border border-primary-container' : 'border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low'}`}>All</Link>
+            <Link href="/dashboard/transactions?type=income" className={`flex items-center h-8 px-3 rounded-full font-label-caps text-[11px] whitespace-nowrap transition-colors ${typeFilter === 'income' ? 'bg-primary-container text-on-primary border border-primary-container' : 'border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low'}`}>Income</Link>
+            <Link href="/dashboard/transactions?type=expense" className={`flex items-center h-8 px-3 rounded-full font-label-caps text-[11px] whitespace-nowrap transition-colors ${typeFilter === 'expense' ? 'bg-primary-container text-on-primary border border-primary-container' : 'border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low'}`}>Expense</Link>
+            <Link href="/dashboard/transactions?type=transfer" className={`flex items-center h-8 px-3 rounded-full font-label-caps text-[11px] whitespace-nowrap transition-colors ${typeFilter === 'transfer' ? 'bg-primary-container text-on-primary border border-primary-container' : 'border border-border-subtle bg-surface text-on-surface hover:bg-surface-container-low'}`}>Transfer</Link>
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="font-label-caps text-label-caps text-on-surface-variant">Sort by:</span>

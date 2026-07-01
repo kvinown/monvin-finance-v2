@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { OmniAiBar } from "@/components/omni-ai-bar";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -44,9 +45,9 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="h-[40px] px-4 bg-surface-container-lowest border border-border-subtle text-on-surface rounded-lg text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+          <Link href="/dashboard/reports" className="h-[40px] px-4 bg-surface-container-lowest border border-border-subtle text-on-surface rounded-lg text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px]">download</span> Export
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -167,9 +168,9 @@ export default async function DashboardPage() {
             <h3 className="font-headline-md text-headline-md text-on-surface">
               Recent Transactions
             </h3>
-            <button className="text-sm font-medium text-secondary hover:text-on-secondary-fixed-variant transition-colors">
+            <Link href="/dashboard/transactions" className="text-sm font-medium text-secondary hover:text-on-secondary-fixed-variant transition-colors">
               View All
-            </button>
+            </Link>
           </div>
           <div className="w-full overflow-x-auto">
             <table className="w-full text-left font-table-data text-table-data">
