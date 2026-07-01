@@ -120,7 +120,7 @@ export function ReportsClient({ transactions }: { transactions: any[] }) {
                   </Pie>
                   <Tooltip 
                     contentStyle={{ borderRadius: '8px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--surface-container-lowest)', color: 'var(--on-surface)' }}
-                    formatter={(value: number) => formatCurrency(value)}
+                    formatter={(value: any) => formatCurrency(Number(value) || 0)}
                   />
                   <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px' }} />
                 </PieChart>
