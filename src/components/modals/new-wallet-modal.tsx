@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { createWallet } from "@/features/wallets/actions/wallet-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function NewWalletModal({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -42,10 +43,7 @@ export function NewWalletModal({ children }: { children: React.ReactNode }) {
               <option value="CREDIT_PAYLATER">Credit / PayLater</option>
             </select>
           </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="balance" className="text-sm font-medium">Initial Balance (IDR)</label>
-            <input id="balance" name="balance" type="number" required defaultValue="0" className="w-full h-10 px-3 bg-surface-container border border-border-subtle rounded-md focus:outline-none focus:ring-1 focus:ring-primary" />
-          </div>
+          <CurrencyInput name="balance" label="Initial Balance (IDR)" required defaultValue="0" />
           <button type="submit" disabled={isPending} className="mt-4 h-10 w-full bg-primary text-on-primary rounded-md font-medium hover:opacity-90 disabled:opacity-50">
             {isPending ? "Creating..." : "Create Wallet"}
           </button>

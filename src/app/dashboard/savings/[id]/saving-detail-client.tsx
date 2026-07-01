@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { depositToSaving, withdrawFromSaving } from "@/features/savings/actions/saving-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function SavingDetailClient({ savingId, wallets, currentBalance }: { savingId: string, wallets: any[], currentBalance: number }) {
   const [activeTab, setActiveTab] = useState<"deposit" | "withdraw">("deposit");
@@ -76,20 +77,7 @@ export function SavingDetailClient({ savingId, wallets, currentBalance }: { savi
           </div>
         )}
 
-        <div className="space-y-2">
-          <label className="font-label-caps text-label-caps text-on-surface-variant uppercase">Amount (IDR)</label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-medium">Rp</span>
-            <input 
-              type="number" 
-              name="amount" 
-              required
-              min="1"
-              placeholder="0"
-              className="w-full h-10 pl-10 pr-3 bg-surface border border-border-subtle rounded-lg text-sm focus:outline-none focus:border-secondary transition-colors"
-            />
-          </div>
-        </div>
+        <CurrencyInput name="amount" label="Amount (IDR)" required />
 
         <div className="space-y-2">
           <label className="font-label-caps text-label-caps text-on-surface-variant uppercase">

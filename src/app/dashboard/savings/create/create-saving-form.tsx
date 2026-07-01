@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSavingGoal } from "@/features/savings/actions/saving-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function CreateSavingForm() {
   const [loading, setLoading] = useState(false);
@@ -45,16 +46,7 @@ export function CreateSavingForm() {
       </div>
 
       <div className="space-y-2">
-        <label className="font-label-caps text-label-caps text-on-surface-variant uppercase">Target Amount (Optional)</label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-medium">Rp</span>
-          <input 
-            type="number" 
-            name="target" 
-            placeholder="50000000"
-            className="w-full h-10 pl-10 pr-3 bg-surface border border-border-subtle rounded-lg text-sm focus:outline-none focus:border-secondary transition-colors"
-          />
-        </div>
+        <CurrencyInput name="target" label="Target Amount (Optional)" placeholder="50.000.000" />
         <p className="text-xs text-on-surface-variant">Leave blank if you just want to save without a specific target.</p>
       </div>
 

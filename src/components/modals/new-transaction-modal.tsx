@@ -4,6 +4,7 @@ import { useState, useEffect, useTransition } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { getUserWallets } from "@/features/wallets/actions/wallet-actions";
 import { createIncome, createExpense, createInternalTransfer } from "@/features/transactions/actions/transaction-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function NewTransactionModal({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -74,10 +75,7 @@ export function NewTransactionModal({ children }: { children: React.ReactNode })
             </div>
           )}
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Amount (IDR)</label>
-            <input name="amount" type="number" required min="1" className="w-full h-10 px-3 bg-surface-container border border-border-subtle rounded-md focus:outline-none focus:ring-1 focus:ring-primary" />
-          </div>
+          <CurrencyInput name="amount" label="Amount (IDR)" required />
           
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Category</label>

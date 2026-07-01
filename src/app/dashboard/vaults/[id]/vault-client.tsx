@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { addVaultMember, contributeToVault } from "@/features/vaults/actions/vault-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function VaultClient({ 
   action, 
@@ -75,20 +77,7 @@ export function VaultClient({
             </div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-on-primary/70 uppercase">Amount (IDR)</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-primary font-medium">Rp</span>
-              <input 
-                type="number" 
-                name="amount" 
-                required
-                min="1"
-                placeholder="0"
-                className="w-full h-10 pl-10 pr-3 bg-on-primary border border-transparent rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-secondary transition-all"
-              />
-            </div>
-          </div>
+          <CurrencyInput name="amount" label="Amount (IDR)" required className="bg-on-primary border-transparent text-primary focus:ring-2 focus:ring-secondary" />
 
           <div className="space-y-2">
             <label className="text-xs font-bold text-on-primary/70 uppercase">From Wallet</label>

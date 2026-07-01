@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendFriendRequest, respondToFriendRequest, sendP2PTransfer } from "@/features/friends/actions/friend-actions";
+import { CurrencyInput } from "@/components/ui/currency-input";
 
 export function FriendClient({ 
   action, 
@@ -149,19 +150,7 @@ export function FriendClient({
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase">Amount (IDR)</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm font-medium">Rp</span>
-                    <input 
-                      type="number" 
-                      name="amount" 
-                      required
-                      min="1"
-                      className="w-full h-12 pl-10 pr-3 bg-surface border border-border-subtle rounded-lg focus:outline-none focus:border-secondary transition-colors text-lg font-medium"
-                    />
-                  </div>
-                </div>
+                <CurrencyInput name="amount" label="Amount (IDR)" required className="h-12 text-lg font-medium" />
 
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-on-surface-variant uppercase">From Wallet</label>
